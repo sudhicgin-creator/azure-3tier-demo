@@ -19,7 +19,7 @@ stages:
           - task: AzureCLI@2
             displayName: 'Terraform Init'
             inputs:
-              azureSubscription: 'azure-service-connection'
+              azureSubscription: 'Sudhi'
               scriptType: 'bash'
               scriptLocation: 'inlineScript'
               inlineScript: |
@@ -29,7 +29,7 @@ stages:
           - task: AzureCLI@2
             displayName: 'Terraform Plan'
             inputs:
-              azureSubscription: 'azure-service-connection'
+              azureSubscription: 'Sudhi'
               scriptType: 'bash'
               scriptLocation: 'inlineScript'
               inlineScript: |
@@ -39,7 +39,7 @@ stages:
           - task: AzureCLI@2
             displayName: 'Terraform Apply'
             inputs:
-              azureSubscription: 'azure-service-connection'
+              azureSubscription: 'Sudhi'
               scriptType: 'bash'
               scriptLocation: 'inlineScript'
               inlineScript: |
