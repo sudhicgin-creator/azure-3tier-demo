@@ -60,3 +60,16 @@ stages:
           - script: |
               ansible-playbook -i ansible/inventory ansible/playbook.yml
             displayName: 'Run Ansible Playbook'
+
+  - stage: Production
+    dependsOn: Ansible
+    jobs:
+      - deployment: DeployProduction
+        environment: 'production'
+        strategy:
+          runOnce:
+            deploy:
+              steps:
+                - script: |
+                    echo "Deploying to production environment"
+                  displayName: 'Production Deployment'
