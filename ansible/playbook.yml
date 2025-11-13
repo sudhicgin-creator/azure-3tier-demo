@@ -1,0 +1,8 @@
+---
+- name: Demo Configuration
+  hosts: localhost
+  gather_facts: yes
+  tasks:
+    - name: Display message
+      debug:
+        msg: "Ansible playbook executed successfully on {{ ansible_hostname }}"
