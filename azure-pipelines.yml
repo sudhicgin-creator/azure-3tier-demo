@@ -54,7 +54,7 @@ stages:
       - job: AnsibleConfig
         steps:
           - script: |
-              python3 -m pip install --user --break-system-packages ansible
+              brew install ansible
             displayName: 'Install Ansible'
 
           - script: |
