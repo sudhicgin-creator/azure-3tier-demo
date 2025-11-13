@@ -53,12 +53,8 @@ stages:
     jobs:
       - job: AnsibleConfig
         steps:
-          - task: UsePythonVersion@0
-            inputs:
-              versionSpec: '3.x'
-
           - script: |
-              pip install ansible
+              python3 -m pip install --user ansible
             displayName: 'Install Ansible'
 
           - script: |
