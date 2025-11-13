@@ -1,0 +1,64 @@
+trigger:
+  - master
+
+pool:
+  vmImage: 'ubuntu-latest'
+
+stages:
+  - stage: Terraform
+    jobs:
+      - job: TerraformDeploy
+        steps:
+          - task: TerraformInstaller@0
+            inputs:
+              terraformVersion: 'latest'
+
+          - task: TerraformTaskV4@4
+            displayName: 'Terraform Init'
+            inputs:
+              provider: 'azurerm'
+              command: 'init'
+              workingDirectory: '$(System.DefaultWorkingDirectory)/terraform'
+              backendServiceArm: 'azure-service-connection'
+
+          - task: TerraformTaskV4@4
+            displayName: 'Terraform Plan'
+            inputs:
+              provider: 'azurerm'
+              command: 'plan'
+              workingDirectory: '$(System.DefaultWorkingDirectory)/terraform'
+              environmentServiceNameAzureRM: 'azure-service-connection'
+
+          - task: TerraformTaskV4@4
+            displayName: 'Terraform Apply'
+            inputs:
+              provider: 'azurerm'
+              command: 'apply'
+              workingDirectory: '$(System.DefaultWorkingDirectory)/terraform'
+              environmentServiceNameAzureRM: 'azure-service-connection'
+
+          - script: |
+              cd terraform
+              terraform output -json > terraform-output.json
+            displayName: 'Generate Terraform Output JSON'
+
+          - publish: terraform/terraform-output.json
+            artifact: terraform-output
+            displayName: 'Publish Terraform Output'
+
+  - stage: Ansible
+    dependsOn: Terraform
+    jobs:
+      - job: AnsibleConfig
+        steps:
+          - task: UsePythonVersion@0
+            inputs:
+              versionSpec: '3.x'
+
+          - script: |
+              pip install ansible
+            displayName: 'Install Ansible'
+
+          - script: |
+              ansible-playbook -i ansible/inventory ansible/playbook.yml
+            displayName: 'Run Ansible Playbook'
